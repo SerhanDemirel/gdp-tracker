@@ -14,11 +14,24 @@ export async function getCountries() {
   }));
 }
 
+interface WorldBankDataItem {
+  date: string;
+  value: number | null;
+  indicator: {
+    id: string;
+    value: string;
+  };
+  country: {
+    id: string;
+    value: string;
+  };
+}
+
 // Temel fonksiyonlar
 export async function getGDPData(countryCode: string) {
   const response = await fetch(`${API_BASE}/country/${countryCode}/indicator/NY.GDP.MKTP.CD?format=json`);
   const [, data] = await response.json();
-  return data?.map((item: any) => ({
+  return data?.map((item: WorldBankDataItem) => ({
     year: item.date,
     value: item.value
   })) || [];
@@ -27,7 +40,7 @@ export async function getGDPData(countryCode: string) {
 export async function getGDPPerCapitaData(countryCode: string) {
   const response = await fetch(`${API_BASE}/country/${countryCode}/indicator/NY.GDP.PCAP.CD?format=json`);
   const [, data] = await response.json();
-  return data?.map((item: any) => ({
+  return data?.map((item: WorldBankDataItem) => ({
     year: item.date,
     value: item.value
   })) || [];
